@@ -1,22 +1,18 @@
 use actix_web::{web, HttpResponse, Responder};
 use crate::db::AppState;
 
-#[derive(Debug, serde::Serialize, serde::Deserialize)]
-struct Physician {
-    employee_id: i32,
-    name: String,
-    position: String,
-    ssn: i32,
-}
+//models
+use crate::models::*;
 
 async fn hello_world() -> impl Responder {
     HttpResponse::Ok().body("Hello, World!")
 }
 
 pub async fn get_docs(db: web::Data<AppState>) -> impl Responder {
-    let conn = db.db_pool.get().unwrap();
 
+    let conn = db.db_pool.get().unwrap();
     let mut stmt = conn.prepare("SELECT * FROM Physician").unwrap();
+
     let rows = stmt.query_map([], |row| {
         Ok(Physician {
             employee_id: row.get(0)?,
@@ -29,6 +25,7 @@ pub async fn get_docs(db: web::Data<AppState>) -> impl Responder {
     let physicians: Vec<Physician> = rows.map(|r| r.unwrap()).collect();
 
     HttpResponse::Ok().json(physicians)
+
 }
 
 pub fn init(cfg: &mut web::ServiceConfig) {
