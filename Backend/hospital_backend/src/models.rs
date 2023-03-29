@@ -123,5 +123,5 @@ pub struct Undergoes {
     pub stay_id: i32,
     pub undergoes_date: String,
     pub attending_physician_id: i32,
-    pub attending_nurse_id
+    pub attending_nurse_id: i32
 }
