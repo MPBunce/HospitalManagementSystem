@@ -1,7 +1,7 @@
 use actix_web::{web, HttpResponse, Responder};
 use crate::db::AppState;
 
-//models
+//Models
 use crate::models::*;
 
 async fn hello_world() -> impl Responder {
