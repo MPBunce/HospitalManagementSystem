@@ -10,7 +10,7 @@ mod db;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
 
-    let db_url = "/Users/m/Desktop/Programming/Projects/HospitalManagmentSystem/Database/Hospital.db";
+    let db_url = "/home/bunk/Programming/HospitalManagmentSystem/Database/hospital.db";
     let pool = db::create_pool(db_url.to_string());
     let app_state = Data::new(db::AppState { db_pool: pool });
 
