@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "nuxt-proxy": "^0.4.1"
+  }
+}
