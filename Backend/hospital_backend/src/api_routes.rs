@@ -50,8 +50,8 @@ pub async fn get_nurses(db: web::Data<AppState>) -> impl Responder {
 }
 
 pub fn init(cfg: &mut web::ServiceConfig) {
-    cfg.service(web::resource("/hw").route(web::get().to(hello_world)))
-        .service(web::resource("/get_docs").route(web::get().to(get_docs)))
-        .service(web::resource("/get_nurses").route(web::get().to(get_nurses))
+    cfg.service(web::resource("/api").route(web::get().to(hello_world)))
+        .service(web::resource("/api/get_docs").route(web::get().to(get_docs)))
+        .service(web::resource("/api/get_nurses").route(web::get().to(get_nurses))
     );
 }
