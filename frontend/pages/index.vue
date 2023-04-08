@@ -10,12 +10,16 @@
         <li>{{ d.ssn }}</li>
         <br>
     </div>
+
+
   </div>
 </template>
 
 <script setup>
-  console.log("herereerere")
-  const doctors = await useFetch("http://localhost:3000/get_docs")
-  console.log(doctors)
-  console.log("XDDDDDDDDDDDDDDDDd")
+  import axios from 'axios';
+  
+  let doctors = await axios.get("http://localhost:1080/api/get_all_physicians")
+  doctors = doctors.data
+
+
 </script>

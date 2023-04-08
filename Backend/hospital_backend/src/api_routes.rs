@@ -8,7 +8,7 @@ async fn hello_world() -> impl Responder {
     HttpResponse::Ok().body("Hello, World!")
 }
 
-pub async fn get_docs(db: web::Data<AppState>) -> impl Responder {
+pub async fn get_all_physicians(db: web::Data<AppState>) -> impl Responder {
 
     let conn = db.db_pool.get().unwrap();
     let mut stmt = conn.prepare("SELECT * FROM Physician").unwrap();
@@ -49,9 +49,34 @@ pub async fn get_nurses(db: web::Data<AppState>) -> impl Responder {
 
 }
 
+
+pub async fn get_physician(db: web::Data<AppState>, path: web::Path<i32>) -> impl Responder {
+
+    let conn = db.db_pool.get().unwrap();
+    let statement_string = "SELECT * FROM Physician WHERE EmployeeID = ".to_owned() + &path.to_string();
+    let mut stmt = conn.prepare( &statement_string ).unwrap();
+
+    let rows = stmt.query_map([], |row| {
+        Ok(Physician {
+            employee_id: row.get(0)?,
+            name: row.get(1)?,
+            position: row.get(2)?,
+            ssn: row.get(3)?,
+        })
+    }).unwrap();
+
+    let physicians: Vec<Physician> = rows.map(|r| r.unwrap()).collect();
+
+    HttpResponse::Ok().json(physicians)
+
+}
+
+
 pub fn init(cfg: &mut web::ServiceConfig) {
-    cfg.service(web::resource("/api").route(web::get().to(hello_world)))
-        .service(web::resource("/api/get_docs").route(web::get().to(get_docs)))
-        .service(web::resource("/api/get_nurses").route(web::get().to(get_nurses))
-    );
+    cfg.service(web::resource("/api/").route(web::get().to(hello_world)))
+        .service(web::resource("/api/get_all_physicians").route(web::get().to(get_all_physicians)))
+        .service(web::resource("/api/get_nurses").route(web::get().to(get_nurses)))
+        .service(web::resource("/api/get_physician/{id}").route(web::get().to(get_physician)))
+    ;
+
 }
