@@ -6,7 +6,7 @@
                 <div class="flex items-stretch justify-between">
 
                     <div class="pl-12 pt-2 text-3xl font-extrabold text-frostfour">
-                        <NuxtLink to="/">Hospital.rs</NuxtLink>
+                        <NuxtLink to="/" @click="login = false">Hospital.rs</NuxtLink>
                     </div>
 
                     <div class="hidden pt-2 space-x-6 lg:flex pr-14">
@@ -17,6 +17,7 @@
                     </div>
 
                     <button
+                        @click="login = !login"
                         id="menu-btn"
                         class="block hamburger lg:hidden focus:outline-none"
                         >
@@ -25,16 +26,21 @@
 
                 </div>
 
-                <div class="lg:hidden">
+                <div  class="lg:hidden">
                     
 
 
-                    <div id="hiddenMenu" class="h-screen w-screen flex flex-col items-center pr-12">
+                    <div v-if="login" id="hiddenMenu" class="h-screen w-screen flex flex-col items-center pr-12 ">
                         
+                        <NuxtLink class="my-12" to="/staff" @click="login = !login">Staff</NuxtLink>
+                        <NuxtLink class="my-12" @click="login = !login">Supplies</NuxtLink>
+                        <NuxtLink class="my-12" @click="login = !login">Hospital Info</NuxtLink>
 
                     </div>
 
+                    <div v-else>
 
+                    </div>
 
                 </div>
                 
@@ -52,6 +58,14 @@
 
 </template>
 
-<script setup>
-     
+<script>
+
+    export default {
+        data() {
+            return {
+                login: false,
+            };
+        }
+    };
+  
 </script>
