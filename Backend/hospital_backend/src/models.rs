@@ -1,3 +1,5 @@
+//Structure for Each Table
+
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct Physician {
     pub employee_id: i32,
@@ -125,3 +127,6 @@ pub struct Undergoes {
     pub attending_physician_id: i32,
     pub attending_nurse_id: i32
 }
+
+//Structures for joined tables
+
