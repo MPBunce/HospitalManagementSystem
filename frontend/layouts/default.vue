@@ -9,7 +9,7 @@
                         <NuxtLink to="/" @click="login = false">Hospital.rs</NuxtLink>
                     </div>
 
-                    <div class="hidden pt-2 space-x-6 lg:flex pr-14">\
+                    <div class="hidden pt-2 space-x-6 lg:flex pr-14">
 
                         <NuxtLink to="/staff">Staff</NuxtLink>
                         <NuxtLink to="/supplies">Supplies</NuxtLink>
