@@ -1,6 +1,4 @@
-//Structure for Each Table
-
-//Doctor Stuff
+////////////////////////        Doctor Stuff        //////////////////////////////////
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct Physician {
     pub employee_id: i32,
@@ -24,13 +22,14 @@ pub struct Procedures {
 pub struct Departments {
     pub employee_id: i32,
     pub department: i32,
-    pub primary_affiliation: String,
-    pub department_id: bool,
+    pub primary_affiliation: bool,
+    pub department_id: i32,
     pub name: String,
     pub head: i32,
 }
 
-//Nurses
+
+//////////////////////          Nurses          /////////////////////////////////
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct Nurse {
     pub employee_id: i32,
