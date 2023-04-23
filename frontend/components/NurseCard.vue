@@ -14,13 +14,6 @@
             <NuxtLink :to="`/staff/nurses/${nurse.employee_id}`"> 
                 <button class="btn my-4 bg-blue-200 hover:bg-blue-100">View Details</button>
             </NuxtLink>
-
-            <NuxtLink :to="`/staff/nurses/${nurse.employee_id}`"> 
-                <button class="btn my-4 bg-yellow-200 hover:bg-yellow-100">Edit Details</button>
-            </NuxtLink>
-            <NuxtLink :to="`/staff/nurses/${nurse.employee_id}`"> 
-                <button class="btn my-4 bg-red-200 hover:bg-red-100">Delete Doctor</button>
-            </NuxtLink>
         </div>
 
     </div>

@@ -1,6 +1,6 @@
 <template>
     <div class="text-black-400">
-
+        
         <div class="shadow-2xl">
             <div class="flex flex-row justify-between">
 

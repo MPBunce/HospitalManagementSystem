@@ -13,7 +13,7 @@
 
                         <NuxtLink to="/staff">Staff</NuxtLink>
                         <NuxtLink to="/supplies">Supplies</NuxtLink>
-                        <NuxtLink to="/staff">Hospital Info</NuxtLink>
+                        <NuxtLink to="/appointments">Appointments</NuxtLink>
 
                     </div>
 
@@ -35,7 +35,7 @@
                         
                         <NuxtLink class="my-12" to="/staff" @click="login = !login">Staff</NuxtLink>
                         <NuxtLink class="my-12" to="/supplies" @click="login = !login">Supplies</NuxtLink>
-                        <NuxtLink class="my-12" to="/staff" @click="login = !login">Hospital Info</NuxtLink>
+                        <NuxtLink class="my-12" to="/appointments" @click="login = !login">Appointments</NuxtLink>
 
                     </div>
 

@@ -1,10 +1,39 @@
 <template>
     <div>
-        {{ input_employee_id }}
+        <h1>Doctor</h1>
+        <div>
+            <div>{{doctor}}</div>
+            <ul>{{ doctor.employee_id }}</ul>
+            <ul>{{ doctor.name }}</ul>
+            <ul>{{ doctor.position }}</ul>
+            <ul>{{ doctor.ssn }}</ul>
+        </div>
         
-        {{departments_data}}
+        <h1>Departments</h1>
+        <div>
+            <div>{{departments}}</div>
+            <ul>{{ departments.employee_id }}</ul>
+            <ul>{{ departments.department }}</ul>
+            <ul>{{ departments.primary_affiliation }}</ul>
+            <ul>{{ departments.department_id }}</ul>
+            <ul>{{ departments.name }}</ul>
+            <ul>{{ departments.head }}</ul>
 
-        {{procedures}}
+        </div>
+
+        <h1>Medical Procedures</h1>
+        <div>
+            <div>{{ procedures }}</div>
+            <ul>{{ procedures.employee_id }}</ul>
+            <ul>{{ procedures.treatment }}</ul>
+            <ul>{{ procedures.certification_date }}</ul>
+            <ul>{{ procedures.certification_exp }}</ul>
+            <ul>{{ procedures.code }}</ul>
+            <ul>{{ procedures.name }}</ul>
+            <ul>{{ procedures.cost }}</ul>
+
+        </div>
+
     </div>
 </template>
 
@@ -19,9 +48,21 @@
     let doctor = await axios.get(`http://localhost:1080/api/get_physician/${input_employee_id}`)
     doctor = doctor.data
 
-    let departments = await axios.get(`http://localhost:1080/api/get_departments/${input_employee_id}`)
-    console.log(departments)
-    let departments_data = departments.data
+    console.log(doctor)
+
+    const departments = ref([]);
+
+    onMounted( async () => {
+        try{
+            const department_response = await axios.get(`http://localhost:1080/api/get_departments/${input_employee_id}`);
+            departments.value = department_response.data;
+            console.log(departments.value)
+        }catch (error) {
+            procedures.value = ["No associated departments"];
+            console.log(error);
+        }
+    });
+
 
 
     const procedures = ref([]);
@@ -30,24 +71,12 @@
         try {
             const response = await axios.get(`http://localhost:1080/api/get_procedures/${input_employee_id}`);
             procedures.value = response.data;
+            console.log(procedures.value)
         } catch (error) {
-            procedures.value = ["Doctor is useless"];
+            procedures.value = ["Doctor cannot preform any treatments"];
             console.log(error);
         }
     });
-
-    // onMounted(async () => {
-              
-    //     try {
-    //         procedures = await axios.get(`http://localhost:1080/api/get_procedures/${input_employee_id}`)
-    //             .catch(function (error) {
-    //                 procedures = "Doctor is useless"
-    //             });
-    //     } catch (e){
-    //         console.log(e)
-    //     }
-    // })
-
 
 
 </script>

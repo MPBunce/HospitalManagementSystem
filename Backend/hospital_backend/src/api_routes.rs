@@ -1,4 +1,4 @@
-use actix_web::{web, HttpResponse, Responder, HttpResponseBuilder, http::StatusCode};
+use actix_web::{ web, HttpResponse, Responder };
 use crate::db::AppState;
 
 //Models
@@ -48,7 +48,6 @@ pub async fn get_nurses(db: web::Data<AppState>) -> impl Responder {
     HttpResponse::Ok().json(nurses)
 
 }
-
 
 pub async fn get_physician(db: web::Data<AppState>, path: web::Path<i32>) -> impl Responder {
 
@@ -151,13 +150,56 @@ pub async fn get_procedures(db: web::Data<AppState>, path: web::Path<i32>) -> im
 
 }
 
+pub async fn get_medication(db: web::Data<AppState>) -> impl Responder {
+
+    let conn = db.db_pool.get().unwrap();
+    let statement_string = format!("SELECT * FROM Medication");
+
+    let mut stmt = conn.prepare( &statement_string ).unwrap();
+
+    let rows = stmt.query_map([], |row| {
+        Ok(Medication {
+            code: row.get(0)?,
+            name: row.get(1)?,
+            brand: row.get(2)?,
+            description: row.get(3)?,
+            in_stock: row.get(4)?,
+
+        })
+    });
+
+    match rows {
+        Ok(iter) => {
+            let mut medications = Vec::new();
+            for result in iter {
+                match result {
+                    Ok(row) => medications.push(row),
+                    Err(e) => {
+                        eprintln!("Error retrieving row: {:?}", e);
+                        return HttpResponse::NotFound().body("No Medications");
+                    }
+                }
+            }
+            HttpResponse::Ok().json(medications)
+        }
+        Err(e) => {
+            eprintln!("Error querying database: {:?}", e);
+            HttpResponse::InternalServerError().body("Error")
+        }
+    }
+
+}
+
+
+
 pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(web::resource("/api/").route(web::get().to(hello_world)))
         .service(web::resource("/api/get_all_physicians").route(web::get().to(get_all_physicians)))
         .service(web::resource("/api/get_physician/{id}").route(web::get().to(get_physician)))
         .service(web::resource("/api/get_departments/{id}").route(web::get().to(get_departments)))
         .service(web::resource("/api/get_procedures/{id}").route(web::get().to(get_procedures)))
-        .service(web::resource("/api/get_nurses").route(web::get().to(get_nurses)))        
+        .service(web::resource("/api/get_nurses").route(web::get().to(get_nurses)))    
+        .service(web::resource("/api/get_medication").route(web::get().to(get_medication)))       
     ;
 
 }

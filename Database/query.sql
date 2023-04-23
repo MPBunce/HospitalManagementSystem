@@ -20,3 +20,23 @@ FROM Physician
     LEFT JOIN Procedure ON Trained_In.Treatment = Procedure.Code
 WHERE
     Physician.EmployeeID = 3
+
+
+--Undergoes
+SELECT * 
+FROM Patient
+    LEFT JOIN Undergoes ON Undergoes.Patient = Patient.SSN
+    --LEFT JOIN Prescribes on Prescribes.Patient = Patient.SSN
+WHERE Undergoes.Patient IS NOT NULL
+
+--Does not Undergoes
+SELECT * 
+FROM Patient
+    LEFT JOIN Undergoes ON Undergoes.Patient = Patient.SSN
+WHERE Undergoes.Patient IS NULL
+
+
+--Mediucation
+SELECT *
+FROM Medication
+
