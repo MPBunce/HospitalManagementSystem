@@ -26,17 +26,24 @@ WHERE
 SELECT * 
 FROM Patient
     LEFT JOIN Undergoes ON Undergoes.Patient = Patient.SSN
-    --LEFT JOIN Prescribes on Prescribes.Patient = Patient.SSN
+    LEFT JOIN Stay ON Stay.StayID = Undergoes.Stay
+    LEFT JOIN Room ON Room.Number = stay.room
 WHERE Undergoes.Patient IS NOT NULL
 
 --Does not Undergoes
 SELECT * 
 FROM Patient
     LEFT JOIN Undergoes ON Undergoes.Patient = Patient.SSN
+    LEFT JOIN Stay ON Stay.StayID = Undergoes.Stay
 WHERE Undergoes.Patient IS NULL
 
+SELECT *
+FROM Undergoes
 
 --Mediucation
 SELECT *
 FROM Medication
 
+DELETE
+FROM Undergoes
+WHERE Physician = 3

@@ -5,6 +5,7 @@
 
     <h1>Avaliable Procedures</h1>
 
+    <h1>avaliable rooms</h1>
 
   </div>
 </template>
