@@ -21,29 +21,24 @@ FROM Physician
 WHERE
     Physician.EmployeeID = 3
 
-
---Undergoes
-SELECT * 
-FROM Patient
-    LEFT JOIN Undergoes ON Undergoes.Patient = Patient.SSN
-    LEFT JOIN Stay ON Stay.StayID = Undergoes.Stay
-    LEFT JOIN Room ON Room.Number = stay.room
-WHERE Undergoes.Patient IS NOT NULL
-
---Does not Undergoes
-SELECT * 
-FROM Patient
-    LEFT JOIN Undergoes ON Undergoes.Patient = Patient.SSN
-    LEFT JOIN Stay ON Stay.StayID = Undergoes.Stay
-WHERE Undergoes.Patient IS NULL
-
-SELECT *
-FROM Undergoes
-
 --Mediucation
 SELECT *
 FROM Medication
 
-DELETE
+--APP
+SELECT *
+FROM Appointment
+    LEFT JOIN Patient ON Patient.SSN = Appointment.Patient
+    LEFT JOIN Prescribes ON Prescribes.Appointment = Appointment.AppointmentID
+
+
+--Surgery
+SELECT *
 FROM Undergoes
-WHERE Physician = 3
+    LEFT JOIN Patient ON Patient.SSN = Undergoes.Patient
+    LEFT JOIN Procedure ON Procedure.Code = Undergoes.Procedure
+    LEFT JOIN Stay on Stay.StayID = Undergoes.Stay
+    LEFT JOIN Room on Room.Number = Stay.Room
+    
+
+

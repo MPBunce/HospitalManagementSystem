@@ -190,7 +190,64 @@ pub async fn get_medication(db: web::Data<AppState>) -> impl Responder {
 
 }
 
+pub async fn get_appointments(db: web::Data<AppState>) -> impl Responder {
 
+    let conn = db.db_pool.get().unwrap();
+    let statement_string = format!("SELECT *
+                                    FROM Appointment
+                                        LEFT JOIN Patient ON Patient.SSN = Appointment.Patient
+                                        LEFT JOIN Prescribes ON Prescribes.Appointment = Appointment.AppointmentID"
+    );
+
+    let mut stmt = conn.prepare( &statement_string ).unwrap();
+
+    let rows = stmt.query_map([], |row| {
+        Ok(Appointments {
+            appointment_id: row.get(0).ok(),
+            patient: row.get(1).ok(),
+            prep_nurse: row.get(2).ok(),
+            physician: row.get(3).ok(),
+            start_time: row.get(4).ok(),
+            end_time: row.get(5).ok(),
+            exam_room: row.get(6).ok(),
+            patient_ssn: row.get(7).ok(),
+            patient_name: row.get(8).ok(),
+            patient_address: row.get(9).ok(),
+            patient_phone: row.get(10).ok(),
+            patient_insurance_id: row.get(11).ok(),
+            patient_primary_care_physician: row.get(12).ok(),
+            prescribes_physician: row.get(13).ok(),
+            prescribes_patient_id: row.get(14).ok(),
+            prescribes_medication: row.get(15).ok(),
+            prescribes_date: row.get(16).ok(),
+            prescribes_appointment: row.get(17).ok(),
+            prescribes_dose: row.get(18).ok(),
+        })
+    });
+
+    match rows {
+        Ok(iter) => {
+            let mut appointments = Vec::new();
+            for result in iter {
+                match result {
+                    Ok(row) => appointments.push(row),
+                    Err(e) => {
+                        eprintln!("Error retrieving row: {:?}", e);
+                        return HttpResponse::NotFound().body("No Appointments?");
+                    }
+                }
+            }
+            HttpResponse::Ok().json(appointments)
+        }
+        Err(e) => {
+            eprintln!("Error querying database: {:?}", e);
+            HttpResponse::InternalServerError().body("Error")
+        }
+    }
+
+}
+
+//pub async fn get_surgeries
 
 pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(web::resource("/api/").route(web::get().to(hello_world)))
@@ -199,7 +256,8 @@ pub fn init(cfg: &mut web::ServiceConfig) {
         .service(web::resource("/api/get_departments/{id}").route(web::get().to(get_departments)))
         .service(web::resource("/api/get_procedures/{id}").route(web::get().to(get_procedures)))
         .service(web::resource("/api/get_nurses").route(web::get().to(get_nurses)))    
-        .service(web::resource("/api/get_medication").route(web::get().to(get_medication)))       
+        .service(web::resource("/api/get_medication").route(web::get().to(get_medication)))      
+        .service(web::resource("/api/get_appointments").route(web::get().to(get_appointments))) 
     ;
 
 }
