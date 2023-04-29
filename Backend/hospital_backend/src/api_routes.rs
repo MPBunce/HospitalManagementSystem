@@ -28,6 +28,62 @@ pub async fn get_all_physicians(db: web::Data<AppState>) -> impl Responder {
 
 }
 
+pub async fn departments_list(db: web::Data<AppState>) -> impl Responder {
+    let conn = db.db_pool.get().unwrap();
+    let mut stmt = conn.prepare("SELECT * FROM Department").unwrap();
+
+    let rows = stmt.query_map([], |row| {
+        Ok(Department{
+            department_id: row.get(0)?,
+            name: row.get(1)?,
+            head: row.get(2)?,
+ 
+        })
+    }).unwrap();
+
+    let departments: Vec<Department> = rows.map(|r| r.unwrap()).collect();
+
+    HttpResponse::Ok().json(departments)
+}
+
+pub async fn procedures_list(db: web::Data<AppState>) -> impl Responder {
+    let conn = db.db_pool.get().unwrap();
+    let mut stmt = conn.prepare("SELECT * FROM Procedure").unwrap();
+
+    let rows = stmt.query_map([], |row| {
+        Ok(Procedure{
+            code: row.get(0)?,
+            name: row.get(1)?,
+            cost: row.get(2)?,
+ 
+        })
+    }).unwrap();
+
+    let procedures: Vec<Procedure> = rows.map(|r| r.unwrap()).collect();
+
+    HttpResponse::Ok().json(procedures)
+}
+
+pub async fn room_list(db: web::Data<AppState>) -> impl Responder {
+    let conn = db.db_pool.get().unwrap();
+    let mut stmt = conn.prepare("SELECT * FROM Room").unwrap();
+
+    let rows = stmt.query_map([], |row| {
+        Ok(Room{
+            room_number: row.get(0)?,
+            room_type: row.get(1)?,
+            room_blockfloor: row.get(2)?,
+            room_blockcode: row.get(3)?,
+            room_unavailable: row.get(4)?,
+        })
+    }).unwrap();
+
+    let rooms: Vec<Room> = rows.map(|r| r.unwrap()).collect();
+
+    HttpResponse::Ok().json(rooms)
+
+}
+
 pub async fn get_nurses(db: web::Data<AppState>) -> impl Responder {
 
     let conn = db.db_pool.get().unwrap();
@@ -290,7 +346,7 @@ pub async fn get_surgeries(db: web::Data<AppState>) -> impl Responder {
             room_type: row.get(20).ok(),
             room_blockfloor: row.get(21).ok(),
             room_blockcode: row.get(22).ok(),
-            room_unacailable: row.get(23).ok(),
+            room_unavailable: row.get(23).ok(),
         })
     });
 
@@ -326,6 +382,9 @@ pub fn init(cfg: &mut web::ServiceConfig) {
         .service(web::resource("/api/get_medication").route(web::get().to(get_medication)))      
         .service(web::resource("/api/get_appointments").route(web::get().to(get_appointments))) 
         .service(web::resource("/api/get_surgeries").route(web::get().to(get_surgeries))) 
+        .service(web::resource("/api/departments_list").route(web::get().to(departments_list))) 
+        .service(web::resource("/api/room_list").route(web::get().to(room_list))) 
+        .service(web::resource("/api/procedures_list").route(web::get().to(procedures_list))) 
     ;
 
 }

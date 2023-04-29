@@ -45,3 +45,16 @@ FROM Undergoes
 SELECT *
 FROM Prescribes
     LEFT JOIN Patient on Patient.SSN = Prescribes.Patient
+
+--Deparment Deads
+SELECT *
+FROM Department
+    LEFT JOIN Physician on Physician.EmployeeID = Department.Head
+
+
+--Procedures
+
+
+--Rooms
+SELECT *
+    FROM Room

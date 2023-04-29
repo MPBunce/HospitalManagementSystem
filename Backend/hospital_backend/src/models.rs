@@ -99,5 +99,32 @@ pub struct Surgery {
     pub room_type: Option<String>,
     pub room_blockfloor: Option<i32>,
     pub room_blockcode: Option<i32>,
-    pub room_unacailable: Option<bool>,
+    pub room_unavailable: Option<bool>,
+}
+
+///////////////////////////////     Depoartment \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct Department {
+    pub department_id: i32,
+    pub name: String,
+    pub head: i32,
+}
+
+////Procedures
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct Procedure {
+    pub code: i32,
+    pub name: String,
+    pub cost: f32,
+}
+
+//// Rooms
+#[derive(Debug, serde::Serialize, serde::Deserialize)]
+pub struct Room {
+    pub room_number: i32,
+    pub room_type: String,
+    pub room_blockfloor: i32,
+    pub room_blockcode: i32,
+    pub room_unavailable: bool,
 }
