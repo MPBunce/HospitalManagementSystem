@@ -247,7 +247,74 @@ pub async fn get_appointments(db: web::Data<AppState>) -> impl Responder {
 
 }
 
-//pub async fn get_surgeries
+pub async fn get_surgeries(db: web::Data<AppState>) -> impl Responder {
+
+
+    let conn = db.db_pool.get().unwrap();
+    let statement_string = format!("SELECT *
+                                    FROM Undergoes
+                                        LEFT JOIN Patient ON Patient.SSN = Undergoes.Patient
+                                        LEFT JOIN Procedure ON Procedure.Code = Undergoes.Procedure
+                                        LEFT JOIN Stay on Stay.StayID = Undergoes.Stay
+                                        LEFT JOIN Room on Room.Number = Stay.Room"
+    );
+
+    let mut stmt = conn.prepare( &statement_string ).unwrap();
+
+    let rows = stmt.query_map([], |row| {
+        Ok(Surgery {
+            patient: row.get(0).ok(),
+            procedure: row.get(1).ok(),
+            stay: row.get(2).ok(),
+            physician: row.get(3).ok(),
+            assisting_nurse: row.get(4).ok(),
+
+            patient_ssn: row.get(5).ok(),
+            patient_name: row.get(6).ok(),
+            patient_address: row.get(7).ok(),
+            patient_phone: row.get(8).ok(),
+            patient_insurance_id: row.get(9).ok(),
+            patient_primary_care_physician: row.get(10).ok(),
+
+            procedure_code: row.get(11).ok(),
+            procedure_name: row.get(12).ok(),
+            procedure_cost: row.get(13).ok(),
+
+            stay_id: row.get(14).ok(),
+            stay_patient_id: row.get(15).ok(),
+            stay_room: row.get(16).ok(),
+            stay_start: row.get(17).ok(),
+            stay_end: row.get(18).ok(),
+            
+            room_number: row.get(19).ok(),
+            room_type: row.get(20).ok(),
+            room_blockfloor: row.get(21).ok(),
+            room_blockcode: row.get(22).ok(),
+            room_unacailable: row.get(23).ok(),
+        })
+    });
+
+    match rows {
+        Ok(iter) => {
+            let mut surgeries = Vec::new();
+            for result in iter {
+                match result {
+                    Ok(row) => surgeries.push(row),
+                    Err(e) => {
+                        eprintln!("Error retrieving row: {:?}", e);
+                        return HttpResponse::NotFound().body("No Surgeries?");
+                    }
+                }
+            }
+            HttpResponse::Ok().json(surgeries)
+        }
+        Err(e) => {
+            eprintln!("Error querying database: {:?}", e);
+            HttpResponse::InternalServerError().body("Error")
+        }
+    }
+
+}
 
 pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(web::resource("/api/").route(web::get().to(hello_world)))
@@ -258,6 +325,7 @@ pub fn init(cfg: &mut web::ServiceConfig) {
         .service(web::resource("/api/get_nurses").route(web::get().to(get_nurses)))    
         .service(web::resource("/api/get_medication").route(web::get().to(get_medication)))      
         .service(web::resource("/api/get_appointments").route(web::get().to(get_appointments))) 
+        .service(web::resource("/api/get_surgeries").route(web::get().to(get_surgeries))) 
     ;
 
 }

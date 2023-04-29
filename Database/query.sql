@@ -42,3 +42,6 @@ FROM Undergoes
     
 
 
+SELECT *
+FROM Prescribes
+    LEFT JOIN Patient on Patient.SSN = Prescribes.Patient

@@ -76,5 +76,28 @@ pub struct Appointments {
 ////////////////////////        Surgery         \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 #[derive(Debug, serde::Serialize, serde::Deserialize)]
 pub struct Surgery {
-
+    pub patient: Option<i32>,
+    pub procedure: Option<i32>,
+    pub stay: Option<i32>,
+    pub physician: Option<i32>,
+    pub assisting_nurse: Option<i32>,
+    pub patient_ssn: Option<i32>,
+    pub patient_name: Option<String>,
+    pub patient_address: Option<String>,
+    pub patient_phone: Option<String>,
+    pub patient_insurance_id: Option<i32>,
+    pub patient_primary_care_physician: Option<i32>,
+    pub procedure_code: Option<i32>,
+    pub procedure_name: Option<i32>,
+    pub procedure_cost: Option<f32>,
+    pub stay_id: Option<i32>,
+    pub stay_patient_id: Option<i32>,
+    pub stay_room: Option<i32>,
+    pub stay_start: Option<String>,
+    pub stay_end: Option<String>,
+    pub room_number: Option<i32>,
+    pub room_type: Option<String>,
+    pub room_blockfloor: Option<i32>,
+    pub room_blockcode: Option<i32>,
+    pub room_unacailable: Option<bool>,
 }
