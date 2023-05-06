@@ -1,5 +1,6 @@
 use actix_web::{ web, HttpResponse, Responder };
 use crate::db::AppState;
+use rusqlite::ToSql;
 
 //Models
 use crate::models::*;
@@ -375,9 +376,17 @@ pub async fn get_surgeries(db: web::Data<AppState>) -> impl Responder {
 pub async fn create_medication(db: web::Data<AppState>, medication: web::Json<Medication>) -> impl Responder {
     let conn = db.db_pool.get().unwrap();
 
+    let params: &[&dyn ToSql] = &[
+        &medication.code, 
+        &medication.name,
+        &medication.brand, 
+        &medication.description, 
+        &medication.in_stock
+    ];
+
+
     let result = conn.execute(
-        "INSERT INTO Medication (Code, Name, Brand, Description, In_Stock) VALUES ($1, $2, $3, $4, $5)",
-        &[&medication.code, &medication.name, &medication.brand, &medication.description, &medication.in_stock],
+        "INSERT INTO Medication (Code, Name, Brand, Description, In_Stock) VALUES ($1, $2, $3, $4, $5)", params,
     );
 
     match result {
@@ -404,7 +413,8 @@ pub fn init(cfg: &mut web::ServiceConfig) {
         .service(web::resource("/api/get_surgeries").route(web::get().to(get_surgeries))) 
         .service(web::resource("/api/departments_list").route(web::get().to(departments_list))) 
         .service(web::resource("/api/room_list").route(web::get().to(room_list))) 
-        .service(web::resource("/api/procedures_list").route(web::get().to(procedures_list))) 
+        .service(web::resource("/api/procedures_list").route(web::get().to(procedures_list)))
+        .service(web::resource("/api/create_medication").route(web::get().to(create_medication))) 
     ;
 
 }
