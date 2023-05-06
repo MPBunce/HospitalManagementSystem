@@ -372,6 +372,26 @@ pub async fn get_surgeries(db: web::Data<AppState>) -> impl Responder {
 
 }
 
+pub async fn create_medication(db: web::Data<AppState>, medication: web::Json<Medication>) -> impl Responder {
+    let conn = db.db_pool.get().unwrap();
+
+    let result = conn.execute(
+        "INSERT INTO Medication (Code, Name, Brand, Description, In_Stock) VALUES ($1, $2, $3, $4, $5)",
+        &[&medication.code, &medication.name, &medication.brand, &medication.description, &medication.in_stock],
+    );
+
+    match result {
+        Ok(rows) => {
+            if rows > 0 {
+                HttpResponse::Created().finish()
+            } else {
+                HttpResponse::InternalServerError().body("Failed to create medication")
+            }
+        }
+        Err(e) => HttpResponse::InternalServerError().body(format!("Failed to create medication: {}", e)),
+    }
+}
+
 pub fn init(cfg: &mut web::ServiceConfig) {
     cfg.service(web::resource("/api/").route(web::get().to(hello_world)))
         .service(web::resource("/api/get_all_physicians").route(web::get().to(get_all_physicians)))
